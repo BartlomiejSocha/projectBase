@@ -37,6 +37,9 @@ public class HomePage {
     @FindBy(xpath = "//div[@class='select2-result-label']")
     private WebElement selectResult;
 
+    @FindBy(xpath = "//div[@class='probox']")
+    private WebElement firstBoxReadMore;
+
     private SeleniumHelper helper;
 
     private WebDriver driver;
@@ -87,6 +90,13 @@ public class HomePage {
         log.info("Adding child");
         childPlusBtn.click();
         log.info("Child added");
+        return this;
+    }
+
+    public HomePage openfirstBoxReadMore() {
+        log.info("Opening first box");
+        firstBoxReadMore.click();
+        log.info("Opened first box");
         return this;
     }
 
