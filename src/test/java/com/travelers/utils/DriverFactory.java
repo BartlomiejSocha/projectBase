@@ -13,26 +13,26 @@ import java.io.File;
 
 public class DriverFactory {
 
-    private static WebDriver driverInstance;
+    public static ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
 
     public static WebDriver getDriver(DriverType driverType) throws NoSuchDriverException {
 
-        if(driverInstance == null) {
+        if(driverInstance.get() == null) {
             getSpecificDriver(driverType);
-            driverInstance.manage().window().maximize();
+            driverInstance.get().manage().window().maximize();
         }
-        return driverInstance;
+        return driverInstance.get();
     }
 
     public static void getSpecificDriver(DriverType driverType) throws NoSuchDriverException {
-        switch (driverType){
 
+        switch (driverType){
             case IE:
                 File ieExe = new File("src//test//resources//executables//drivers//IEDriverServer.exe");
                 InternetExplorerDriverService ieService = new InternetExplorerDriverService.Builder()
                         .usingDriverExecutable(ieExe)
                         .usingAnyFreePort().build();
-                driverInstance = new InternetExplorerDriver(ieService);
+                driverInstance.set(new InternetExplorerDriver(ieService));
                 break;
 
             case CHROME:
@@ -40,7 +40,7 @@ public class DriverFactory {
                 ChromeDriverService chromeService = new ChromeDriverService.Builder()
                         .usingDriverExecutable(chromeExe)
                         .usingAnyFreePort().build();
-                driverInstance = new ChromeDriver(chromeService);
+                driverInstance.set(new ChromeDriver(chromeService));
                 break;
 
             case FIREFOX:
@@ -48,16 +48,12 @@ public class DriverFactory {
                 GeckoDriverService geckoDriverService = new GeckoDriverService.Builder()
                         .usingDriverExecutable(firefoxExe)
                         .usingAnyFreePort().build();
-                driverInstance = new FirefoxDriver(geckoDriverService);
+                driverInstance.set(new FirefoxDriver(geckoDriverService));
                 break;
 
             default:
                 System.out.println("No such driver");
                 throw new NoSuchDriverException();
         }
-    }
-
-    public static void resetDriver() {
-        driverInstance = null;
     }
 }

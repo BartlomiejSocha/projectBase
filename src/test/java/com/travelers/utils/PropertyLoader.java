@@ -8,13 +8,6 @@ public class PropertyLoader {
 
     public static Configuration loadProperties() throws ConfigurationException {
         Configurations configs = new Configurations();
-        return configs.properties("src//main//resources//test.properties");
-    }
-
-    public static void main(String[] args) throws ConfigurationException {
-        Configuration config = loadProperties();
-        System.out.println(config.getString("driver"));
-        System.out.println(config.getBoolean("isDev"));
-
+        return configs.properties("config.properties");
     }
 }

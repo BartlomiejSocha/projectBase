@@ -4,12 +4,16 @@ package com.travelers.helpers;
 import com.travelers.exceptions.NoSuchDriverException;
 import com.travelers.utils.DriverFactory;
 import com.travelers.utils.DriverType;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 import java.io.IOException;
+
+import static com.travelers.utils.PropertyLoader.loadProperties;
 
 public class TestListener implements ITestListener {
 
@@ -28,9 +32,10 @@ public class TestListener implements ITestListener {
     @Override
     public void onTestFailure(ITestResult result) {
         try {
+            Configuration config = loadProperties();
             log.debug("On test failure");
-            SeleniumHelper.takeScreenshot(DriverFactory.getDriver(DriverType.CHROME));
-        } catch (IOException | NoSuchDriverException e) {
+            SeleniumHelper.takeScreenshot(DriverFactory.getDriver(DriverType.valueOf(config.getString("browser"))));
+        } catch (IOException | NoSuchDriverException | ConfigurationException e) {
             log.error(e.getStackTrace());    }
     }
 

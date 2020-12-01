@@ -1,53 +1,60 @@
 package com.travelers.tests;
 
 import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
-import com.aventstack.extentreports.MediaEntityModelProvider;
-import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.aventstack.extentreports.model.Media;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.travelers.exceptions.NoSuchDriverException;
 import com.travelers.helpers.SeleniumHelper;
 import com.travelers.utils.DriverFactory;
 import com.travelers.utils.DriverType;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.*;
 
 import java.io.IOException;
+
+import static com.travelers.utils.PropertyLoader.loadProperties;
 
 public class BaseSeleniumTest {
 
     protected WebDriver driver;
-    protected ExtentHtmlReporter reporter;
     protected ExtentReports reports;
+    protected ExtentSparkReporter sparkReporter;
+    protected ExtentTest test;
 
     @BeforeTest
     public void setUpReporter() {
-        reporter = new ExtentHtmlReporter("src//test//resources//reports//index.html");
         reports = new ExtentReports();
-        reports.attachReporter(reporter);
+        sparkReporter = new ExtentSparkReporter("src//test//resources//reports//index.html");
+        sparkReporter.config().setTheme(Theme.DARK);
+        reports.attachReporter(sparkReporter);
     }
+
     @BeforeMethod
-    public void setUp() throws NoSuchDriverException {
-        System.out.println("Before test");
-        driver = DriverFactory.getDriver(DriverType.CHROME);
+    public void setUp() throws NoSuchDriverException, ConfigurationException {
+        Configuration config = loadProperties();
+        System.out.println("Before method");
+        driver = DriverFactory.getDriver(DriverType.valueOf(config.getString("browser")));
     }
 
     @AfterMethod
     public void tearDown() {
-        System.out.println("After Test");
+        System.out.println("After method");
         driver.quit();
-        DriverFactory.resetDriver();
+        DriverFactory.driverInstance.remove();
     }
 
     @AfterTest
     public void tearDownReporter() {
-        reporter.flush();
+        System.out.println("tear down reporter");
         reports.flush();
     }
 
-    protected MediaEntityModelProvider getScreenshot() throws IOException {
+    protected Media getScreenshot() throws IOException {
         return MediaEntityBuilder.createScreenCaptureFromPath(SeleniumHelper.takeScreenshot(driver)).build();
     }
 }
