@@ -1,6 +1,5 @@
 package com.travelers.tests;
 
-import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.travelers.helpers.ExcelHelper;
 import com.travelers.helpers.TestListener;
@@ -27,7 +26,7 @@ public class SearchHotelTest extends BaseSeleniumTest {
                                 String sHotel, String sPrice, String tHotel, String tPrice) throws ConfigurationException, IOException {
 
         Configuration config = loadProperties();
-        ExtentTest test = reports.createTest("Search Hotel test");
+        test = reports.createTest("Search Hotel test");
         driver.get(config.getString("baseURL"));
         HomePage homePage = new HomePage(driver);
 

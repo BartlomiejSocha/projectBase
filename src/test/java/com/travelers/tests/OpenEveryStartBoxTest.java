@@ -1,6 +1,5 @@
 package com.travelers.tests;
 
-import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.travelers.helpers.TestListener;
 import com.travelers.pages.HomePage;
@@ -21,7 +20,8 @@ public class OpenEveryStartBoxTest extends BaseSeleniumTest {
     public void openEveryBox() throws ConfigurationException, IOException {
 
         Configuration config = loadProperties();
-        ExtentTest test = reports.createTest("Click Every Box test");
+        test = reports.createTest("Open Every Box test");
+
         driver.get(config.getString("baseURL"));
         HomePage homePage = new HomePage(driver);
 

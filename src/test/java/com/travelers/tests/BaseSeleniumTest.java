@@ -5,6 +5,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.aventstack.extentreports.append.*;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.travelers.exceptions.NoSuchDriverException;
 import com.travelers.helpers.SeleniumHelper;
@@ -16,20 +17,20 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 import static com.travelers.utils.PropertyLoader.loadProperties;
 
 public class BaseSeleniumTest {
 
     protected WebDriver driver;
-    protected ExtentReports reports;
-    protected ExtentSparkReporter sparkReporter;
+    public static ExtentReports reports = new ExtentReports();
+    public static ExtentSparkReporter sparkReporter;
     protected ExtentTest test;
 
-    @BeforeTest
+    @BeforeSuite
     public void setUpReporter() {
-        reports = new ExtentReports();
-        sparkReporter = new ExtentSparkReporter("src//test//resources//reports//index.html");
+        sparkReporter = new ExtentSparkReporter("src//test//resources//reports//test" + LocalTime.now().getNano() + ".html");
         sparkReporter.config().setTheme(Theme.DARK);
         reports.attachReporter(sparkReporter);
     }
@@ -48,7 +49,7 @@ public class BaseSeleniumTest {
         DriverFactory.driverInstance.remove();
     }
 
-    @AfterTest
+    @AfterSuite
     public void tearDownReporter() {
         System.out.println("tear down reporter");
         reports.flush();
