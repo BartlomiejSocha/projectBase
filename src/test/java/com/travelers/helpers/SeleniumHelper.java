@@ -1,8 +1,10 @@
 package com.travelers.helpers;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +52,10 @@ public class SeleniumHelper {
         File destinationFile = new File("src/test/resources/screenshots/" + LocalTime.now().getNano() + ".png");
         Files.copy(screenshotFile.toPath(), destinationFile.toPath());
         return destinationFile.getAbsolutePath();
+    }
+
+    public String getFile() {
+        return new File("./files/firstFile.xml").getAbsolutePath();
     }
 
 }
